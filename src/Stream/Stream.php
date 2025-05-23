@@ -119,7 +119,6 @@ class Stream implements StreamInterface
                  */
 
                 $metaData = \stream_get_meta_data($resource);
-                /** @phpstan-ignore-next-line */
                 $metaData = $metaData['uri'] ?? '';
 
                 if ($metaData === 'php://input') {
