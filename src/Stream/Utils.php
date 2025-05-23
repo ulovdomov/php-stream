@@ -26,12 +26,12 @@ class Utils
     {
         /** @var StreamException|null $ex */
         $ex = null;
-        set_error_handler(static function (int $errno, string $errstr) use ($filename, $mode, & $ex): bool {
-            $ex = new StreamException(sprintf(
+        \set_error_handler(static function (int $errno, string $errstr) use ($filename, $mode, &$ex): bool {
+            $ex = new StreamException(\sprintf(
                 'Unable to open "%s" using mode "%s": %s',
                 $filename,
                 $mode,
-                $errstr
+                $errstr,
             ));
 
             return true;
@@ -39,17 +39,17 @@ class Utils
 
         try {
             /** @var resource $handle */
-            $handle = fopen($filename, $mode);
+            $handle = \fopen($filename, $mode);
         } catch (\Throwable $e) {
-            $ex = new StreamException(sprintf(
+            $ex = new StreamException(\sprintf(
                 'Unable to open "%s" using mode "%s": %s',
                 $filename,
                 $mode,
-                $e->getMessage()
+                $e->getMessage(),
             ), 0, $e);
         }
 
-        restore_error_handler();
+        \restore_error_handler();
 
         if ($ex !== null) {
             throw $ex;

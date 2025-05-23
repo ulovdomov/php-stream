@@ -17,26 +17,20 @@ class Stream implements StreamInterface
     private const READABLE_MODES = '/r|a\+|ab\+|w\+|wb\+|x\+|xb\+|c\+|cb\+/';
     private const WRITABLE_MODES = '/a|w|r\+|rb\+|rw|x|c/';
 
-    /** @var resource */
-    private $stream;
+    private int|null $size = null;
 
-    /** @var int|null */
-    private $size;
+    private bool $seekable;
 
-    /** @var bool */
-    private $seekable;
+    private bool $readable;
 
-    /** @var bool */
-    private $readable;
+    private bool $writable;
 
-    /** @var bool */
-    private $writable;
+    private string|null $uri = null;
 
-    /** @var string|null */
-    private $uri;
-
-    /** @var array<mixed> */
-    private $customMetadata;
+    /**
+     * @var array<mixed>
+     */
+    private array $customMetadata;
 
     /**
      * This constructor accepts an associative array of options.
@@ -52,7 +46,7 @@ class Stream implements StreamInterface
      *
      * @throws StreamException if the stream is not a stream resource
      */
-    public function __construct($stream, array $options = [])
+    public function __construct(private $stream, array $options = [])
     {
         if (!\is_resource($stream)) {
             throw new StreamException('Stream must be a resource');
@@ -63,7 +57,6 @@ class Stream implements StreamInterface
         }
 
         $this->customMetadata = $options['metadata'] ?? [];
-        $this->stream = $stream;
         $meta = \stream_get_meta_data($this->stream);
         $this->seekable = $meta['seekable'];
         $this->readable = (bool) \preg_match(self::READABLE_MODES, $meta['mode']);
@@ -107,59 +100,60 @@ class Stream implements StreamInterface
      */
     public static function create($resource = '', array $options = []): StreamInterface
     {
-        if (is_scalar($resource)) {
+        if (\is_scalar($resource)) {
             $stream = Utils::tryFopen('php://temp', 'r+');
+
             if ($resource !== '') {
-                fwrite($stream, (string) $resource);
-                fseek($stream, 0);
+                \fwrite($stream, (string) $resource);
+                \fseek($stream, 0);
             }
 
             return new self($stream, $options);
         }
 
-        switch (gettype($resource)) {
+        switch (\gettype($resource)) {
             case 'resource':
                 /*
                  * The 'php://input' is a special stream with quirks and inconsistencies.
                  * We avoid using that stream by reading it into php://temp
                  */
 
-                /** @var resource $resource */
                 if ((\stream_get_meta_data($resource)['uri'] ?? '') === 'php://input') {
                     $stream = Utils::tryFopen('php://temp', 'w+');
-                    stream_copy_to_stream($resource, $stream);
-                    fseek($stream, 0);
+                    \stream_copy_to_stream($resource, $stream);
+                    \fseek($stream, 0);
                     $resource = $stream;
                 }
 
                 return new Stream($resource, $options);
             case 'object':
-                /** @var object $resource */
                 if ($resource instanceof StreamInterface) {
                     return $resource;
                 } elseif ($resource instanceof \Iterator) {
-                    return new PumpStream(function () use ($resource) {
+                    return new PumpStream(static function () use ($resource) {
                         if (!$resource->valid()) {
                             return false;
                         }
+
                         $result = $resource->current();
                         $resource->next();
 
                         return $result;
                     }, $options);
-                } elseif (method_exists($resource, '__toString')) {
+                } elseif (\method_exists($resource, '__toString')) {
                     return self::create((string) $resource, $options);
                 }
+
                 break;
             case 'NULL':
                 return new Stream(Utils::tryFopen('php://temp', 'r+'), $options);
         }
 
-        if (is_callable($resource)) {
+        if (\is_callable($resource)) {
             return new PumpStream($resource, $options);
         }
 
-        throw new StreamException('Invalid resource type: '.gettype($resource));
+        throw new StreamException('Invalid resource type: '.\gettype($resource));
     }
 
     /**
@@ -182,6 +176,7 @@ class Stream implements StreamInterface
             if (\PHP_VERSION_ID >= 70400) {
                 throw $e;
             }
+
             \trigger_error(\sprintf('%s::__toString exception: %s', self::class, (string) $e), \E_USER_ERROR);
 
             return '';
@@ -210,6 +205,7 @@ class Stream implements StreamInterface
             if (\is_resource($this->stream)) {
                 \fclose($this->stream);
             }
+
             $this->detach();
         }
     }
@@ -303,9 +299,11 @@ class Stream implements StreamInterface
         if (!isset($this->stream)) {
             throw new StreamException('Stream is detached');
         }
+
         if (!$this->seekable) {
             throw new StreamException('Stream is not seekable');
         }
+
         if (\fseek($this->stream, $offset, $whence) === -1) {
             throw new StreamException('Unable to seek to stream position '
                 . $offset . ' with whence ' . \var_export($whence, true));
@@ -317,9 +315,11 @@ class Stream implements StreamInterface
         if (!isset($this->stream)) {
             throw new StreamException('Stream is detached');
         }
+
         if (!$this->readable) {
             throw new StreamException('Cannot read from non-readable stream');
         }
+
         if ($length < 0) {
             throw new StreamException('Length parameter cannot be negative');
         }
@@ -330,7 +330,7 @@ class Stream implements StreamInterface
 
         try {
             $string = \fread($this->stream, $length);
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             throw new StreamException('Unable to read from stream', 0, $e);
         }
 
@@ -346,6 +346,7 @@ class Stream implements StreamInterface
         if (!isset($this->stream)) {
             throw new StreamException('Stream is detached');
         }
+
         if (!$this->writable) {
             throw new StreamException('Cannot write to a non-writable stream');
         }
@@ -361,10 +362,7 @@ class Stream implements StreamInterface
         return $result;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getMetadata($key = null)
+    public function getMetadata($key = null): mixed
     {
         if (!isset($this->stream)) {
             return $key ? null : [];
@@ -381,6 +379,7 @@ class Stream implements StreamInterface
 
     /**
      * @param resource $stream
+     *
      * @throws StreamException
      */
     public static function tryGetContents($stream): string
@@ -389,7 +388,7 @@ class Stream implements StreamInterface
         \set_error_handler(static function (int $errno, string $errstr) use (&$ex): bool {
             $ex = new StreamException(\sprintf(
                 'Unable to read stream contents: %s',
-                $errstr
+                $errstr,
             ));
 
             return true;
@@ -405,7 +404,7 @@ class Stream implements StreamInterface
         } catch (\Throwable $e) {
             $ex = new StreamException(\sprintf(
                 'Unable to read stream contents: %s',
-                $e->getMessage()
+                $e->getMessage(),
             ), 0, $e);
         }
 

@@ -9,3 +9,4 @@ temp/*
 !temp/.gitkeep
 .DS_Store
 .composer
+tests/Tests/data/test.txt.copy

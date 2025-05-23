@@ -16,7 +16,9 @@ final class PumpStream implements StreamInterface
 
     private int $tellPos = 0;
 
-    /** @var array<mixed> */
+    /**
+     * @var array<mixed>
+     */
     private array $metadata;
 
     private BufferStream $buffer;

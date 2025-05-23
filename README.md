@@ -59,9 +59,6 @@ $stream->getMimeType(); // string: text/plain
 
 // save content as file
 $stream->saveAs(__DIR__ . '/my-new-file.jpg');
-
-// save content as file
-$stream->saveAs(__DIR__ . '/my-new-file.jpg');
 ```
 
 ## Utils

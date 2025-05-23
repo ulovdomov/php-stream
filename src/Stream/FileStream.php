@@ -53,14 +53,16 @@ class FileStream implements StreamInterface, Stringable
         if ($resource instanceof self) {
             return $resource;
         }
+
         return new self(Stream::create($resource, $options));
     }
 
     /**
      * @param array{size?: int, metadata?: array<mixed>} $options  Additional options
+     *
      * @throws StreamException if the $resource arg is not valid.
      */
-    public static function createForPath(string $path, string $mode, array $options = []): StreamInterface
+    public static function createForPath(string $path, string $mode = 'w', array $options = []): self
     {
         return self::create(Utils::tryFopen($path, $mode), $options);
     }
@@ -92,6 +94,7 @@ class FileStream implements StreamInterface, Stringable
 
             if ($resource !== null) {
                 $this->stream = Stream::create($resource);
+                $this->rewind();
             }
         }
     }
@@ -200,9 +203,16 @@ class FileStream implements StreamInterface, Stringable
         return $this->stream->isWritable();
     }
 
+    /**
+     * @throws StreamException
+     */
     public function write(string $string): int
     {
-        return $this->stream->write($string);
+        try {
+            return $this->stream->write($string);
+        } catch (\Throwable $e) {
+            throw new StreamException('Unable to write to stream', 0, $e);
+        }
     }
 
     public function isReadable(): bool
@@ -222,9 +232,16 @@ class FileStream implements StreamInterface, Stringable
         }
     }
 
+    /**
+     * @throws StreamException
+     */
     public function getContents(): string
     {
-        return $this->stream->getContents();
+        try {
+            return $this->stream->getContents();
+        } catch (\Throwable $e) {
+            throw new StreamException('Unable to get stream contents', 0, $e);
+        }
     }
 
     public function getMetadata(string|null $key = null)
