@@ -1,7 +1,5 @@
 FROM php:8.3-fpm-alpine3.19 AS base
 
-ARG COMPOSER_TOKEN
-
 RUN apk --update --no-cache add \
   bzip2 \
   bzip2-dev \
@@ -36,8 +34,6 @@ RUN chown -R www-data:www-data .
 USER www-data
 
 RUN mkdir -p .composer
-
-RUN echo "{\"github-oauth\": {\"github.com\": \"${COMPOSER_TOKEN}\"}}" > .composer/auth.json
 
 FROM base as build-local
 

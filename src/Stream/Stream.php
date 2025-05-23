@@ -118,7 +118,11 @@ class Stream implements StreamInterface
                  * We avoid using that stream by reading it into php://temp
                  */
 
-                if ((\stream_get_meta_data($resource)['uri'] ?? '') === 'php://input') {
+                $metaData = \stream_get_meta_data($resource);
+                /** @phpstan-ignore-next-line */
+                $metaData = $metaData['uri'] ?? '';
+
+                if ($metaData === 'php://input') {
                     $stream = Utils::tryFopen('php://temp', 'w+');
                     \stream_copy_to_stream($resource, $stream);
                     \fseek($stream, 0);
