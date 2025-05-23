@@ -1,0 +1,81 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Only booleans are allowed in a negated boolean, string\\|null given\\.$#"
+			count: 1
+			path: ../src/Stream/PumpStream.php
+
+		-
+			message: "#^Only booleans are allowed in an if condition, int given\\.$#"
+			count: 1
+			path: ../src/Stream/PumpStream.php
+
+		-
+			message: "#^Unreachable statement \\- code above always terminates\\.$#"
+			count: 1
+			path: ../src/Stream/PumpStream.php
+
+		-
+			message: "#^Method UlovDomov\\\\Stream\\\\Stream\\:\\:create\\(\\) has parameter \\$options with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: ../src/Stream/Stream.php
+
+		-
+			message: "#^Method UlovDomov\\\\Stream\\\\Stream\\:\\:tryGetContents\\(\\) should return string but returns string\\|false\\.$#"
+			count: 1
+			path: ../src/Stream/Stream.php
+
+		-
+			message: "#^Offset 'uri' on array\\{timed_out\\: bool, blocked\\: bool, eof\\: bool, unread_bytes\\: int, stream_type\\: string, wrapper_type\\: string, wrapper_data\\: mixed, mode\\: string, \\.\\.\\.\\} on left side of \\?\\? always exists and is not nullable\\.$#"
+			count: 1
+			path: ../src/Stream/Stream.php
+
+		-
+			message: "#^Only booleans are allowed in a negated boolean, string\\|null given\\.$#"
+			count: 1
+			path: ../src/Stream/Stream.php
+
+		-
+			message: "#^Only booleans are allowed in a ternary operator condition, string\\|null given\\.$#"
+			count: 1
+			path: ../src/Stream/Stream.php
+
+		-
+			message: "#^Only booleans are allowed in an if condition, UlovDomov\\\\Stream\\\\Exception\\\\StreamException\\|null given\\.$#"
+			count: 1
+			path: ../src/Stream/Stream.php
+
+		-
+			message: "#^Only booleans are allowed in an if condition, string\\|null given\\.$#"
+			count: 1
+			path: ../src/Stream/Stream.php
+
+		-
+			message: "#^Parameter \\#1 \\$source of class UlovDomov\\\\Stream\\\\PumpStream constructor expects callable\\(int\\)\\: \\(string\\|false\\|null\\), Closure\\(\\)\\: mixed given\\.$#"
+			count: 1
+			path: ../src/Stream/Stream.php
+
+		-
+			message: "#^Property UlovDomov\\\\Stream\\\\Stream\\:\\:\\$stream \\(resource\\) in isset\\(\\) is not nullable\\.$#"
+			count: 10
+			path: ../src/Stream/Stream.php
+
+		-
+			message: "#^Property UlovDomov\\\\Stream\\\\Stream\\:\\:\\$uri \\(string\\|null\\) does not accept mixed\\.$#"
+			count: 1
+			path: ../src/Stream/Stream.php
+
+		-
+			message: "#^Unreachable statement \\- code above always terminates\\.$#"
+			count: 1
+			path: ../src/Stream/Stream.php
+
+		-
+			message: "#^Variable \\$contents might not be defined\\.$#"
+			count: 1
+			path: ../src/Stream/Stream.php
+
+		-
+			message: "#^Variable \\$handle might not be defined\\.$#"
+			count: 1
+			path: ../src/Stream/Utils.php

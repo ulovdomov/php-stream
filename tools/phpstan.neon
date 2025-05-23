@@ -1,0 +1,28 @@
+includes:
+    - ../vendor/phpstan/phpstan-strict-rules/rules.neon
+#    - ../vendor/phpstan/phpstan-doctrine/extension.neon
+#    - ../vendor/phpstan/phpstan-doctrine/rules.neon
+    - ./phpstan-baseline.neon
+
+parameters:
+    level: 9
+    tmpDir: ../temp/.php-stan-cache
+    resultCachePath: %currentWorkingDirectory%/temp/.php-stan-cache/resultCache.php
+    paths:
+        - ../src
+        - ../tests
+#    doctrine:
+#        objectManagerLoader: ../.infrastructure/PHPStan/object-manager.php
+#    excludePaths:
+#        - ../src/Stream/Utils.php
+    exceptions:
+        check:
+            missingCheckedExceptionInThrows: true
+            tooWideThrowType: true
+        uncheckedExceptionClasses:
+            - 'LogicException'
+            - 'PHPUnit\Framework\Exception'
+        checkedExceptionClasses:
+            - 'Exception'
+    ignoreErrors:
+        - '#Method UlovDomov\\Stream\\BufferStream::__toString\(\) throws checked exception RuntimeException but it.{1}s missing from the PHPDoc @throws tag\.#'
