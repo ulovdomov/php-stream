@@ -46,7 +46,11 @@ $stream = \UlovDomov\Stream\FileStream::create('my stream content');
 For `file path`:
 
 ```php
+// stream for reading
 $stream = \UlovDomov\Stream\FileStream::createForPath(__DIR__ . '/file.pdf');
+
+// stream for writing
+$stream = \UlovDomov\Stream\FileStream::createForPath(__DIR__ . '/file.pdf', 'w');
 ```
 
 ## Additional features
