@@ -48,6 +48,9 @@ $stream = \UlovDomov\Stream\FileStream::createForPath(__DIR__ . '/file.pdf', 'w'
 // get mime type
 $stream->getMimeType(); // string: text/plain
 
+// get file extension (can return null for application/octet-stream or unknown mimetype)
+$stream->getExtension(); // string: txt
+
 // save content as file
 $stream->saveAs(__DIR__ . '/my-new-file.jpg');
 ```
@@ -61,6 +64,27 @@ Replacement for `fopen`, it returns a resource; throws a `StreamException` on er
 ```php
 /** @var resource $file */
 $file = \UlovDomov\Stream\Utils::tryFopen(__DIR__ . '/my-file.pdf');
+```
+
+### Method `mimetypeToExtension`
+
+Get file extension. Can return null for `application/octet-stream` or not implemented mimetype.
+
+```php
+\UlovDomov\Stream\Utils::mimetypeToExtension('application/pdf');
+// "pdf"
+```
+
+### Method `isOctetStream`
+
+Get `true` if mimetype is `application/octet-stream`.
+
+```php
+\UlovDomov\Stream\Utils::isOctetStream('application/octet-stream');
+// true
+
+\UlovDomov\Stream\Utils::isOctetStream('text/json');
+// false
 ```
 
 ## Development

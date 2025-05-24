@@ -76,7 +76,9 @@ class FileStream implements StreamInterface, Stringable
 
         $resource = null;
         try {
-            $this->rewind();
+            if ($this->isSeekable()) {
+                $this->rewind();
+            }
 
             $resource = $this->detach();
 
@@ -94,9 +96,20 @@ class FileStream implements StreamInterface, Stringable
 
             if ($resource !== null) {
                 $this->stream = Stream::create($resource);
-                $this->rewind();
+
+                if ($this->isSeekable()) {
+                    $this->rewind();
+                }
             }
         }
+    }
+
+    /**
+     * @throws StreamException
+     */
+    public function getExtension(): string|null
+    {
+        return Utils::mimetypeToExtension($this->getMimeType());
     }
 
     /**
@@ -118,10 +131,18 @@ class FileStream implements StreamInterface, Stringable
             }
         }
 
-        $pos = $this->tell();
-        $this->rewind();
+        $pos = 0;
+
+        if ($this->isSeekable()) {
+            $pos = $this->tell();
+            $this->rewind();
+        }
+
         $buffer = $this->read(4096);
-        $this->seek($pos);
+
+        if ($this->isSeekable()) {
+            $this->seek($pos);
+        }
 
         $type = (new \finfo(\FILEINFO_MIME_TYPE))->buffer($buffer);
 
