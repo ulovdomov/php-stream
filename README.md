@@ -5,23 +5,10 @@ along with an extended `UlovDomov\Stream\FileStream` class that adds more.
 
 ## Installation
 
-Add following to your `composer.json`:
-
-```json
-{
-  "repositories": [
-    {
-      "type": "vcs",
-      "url": "https://github.com/ulovdomov/stream"
-    }
-  ]
-}
-```
-
-And run:
+Run:
 
 ```shell
-composer require ulovdomov/stream
+composer require ulovdomov/php-stream
 ```
 
 ## Usage
