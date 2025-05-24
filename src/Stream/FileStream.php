@@ -62,7 +62,7 @@ class FileStream implements StreamInterface, Stringable
      *
      * @throws StreamException if the $resource arg is not valid.
      */
-    public static function createForPath(string $path, string $mode = 'w', array $options = []): self
+    public static function createForPath(string $path, string $mode = 'r', array $options = []): self
     {
         return self::create(Utils::tryFopen($path, $mode), $options);
     }
