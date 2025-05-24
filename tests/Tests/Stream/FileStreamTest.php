@@ -1,6 +1,6 @@
 <?php declare(strict_types = 1);
 
-namespace Tests\Package;
+namespace Tests\Stream;
 
 use PHPUnit\Framework\TestCase;
 use UlovDomov\Stream\Exception\StreamException;
@@ -30,7 +30,7 @@ final class FileStreamTest extends TestCase
 
         @\unlink($path);
 
-        $stream = FileStream::create(\fopen(__DIR__ . '/../data/test.txt', 'r'));
+        $stream = FileStream::createForPath(__DIR__ . '/../data/test.txt');
         self::assertSame(self::CONTENT, $stream->getContents());
 
         $stream->saveAs($path);
@@ -42,6 +42,16 @@ final class FileStreamTest extends TestCase
 
         $streamCopy = FileStream::createForPath($path, 'r');
         self::assertStream($streamCopy);
+    }
+
+    /**
+     * @throws StreamException
+     */
+    public function testString(): void
+    {
+        $stream = FileStream::create(self::CONTENT);
+
+        self::assertStream($stream);
     }
 
     /**
