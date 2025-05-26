@@ -8,7 +8,7 @@
   },
   "require-dev": {
     "ulovdomov/php-code-style": "^1.0.0",
-    "phpunit/phpunit": "^10.5",
+    "phpunit/phpunit": "^8.5|^10.5",
     "phpstan/phpstan": "^1.11",
     "phpstan/phpstan-strict-rules": "^1.6"
   },
