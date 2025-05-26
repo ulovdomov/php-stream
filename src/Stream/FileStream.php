@@ -10,7 +10,7 @@ class FileStream implements StreamInterface, Stringable
 {
     public function __construct(
         private StreamInterface $stream,
-        private readonly string|null $mimeType = null,
+        private string|null $mimeType = null,
     ) {
     }
 
