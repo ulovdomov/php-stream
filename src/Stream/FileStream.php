@@ -117,7 +117,7 @@ class FileStream implements StreamInterface, Stringable
      */
     public function getMimeType(): string
     {
-        if ($this->mimeType !== null && $this->mimeType !== 'application/octet-stream') {
+        if ($this->mimeType !== null && !Utils::isOctetStream($this->mimeType)) {
             return $this->mimeType;
         }
 
