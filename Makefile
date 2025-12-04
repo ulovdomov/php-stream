@@ -36,10 +36,6 @@ ports:
 	@awk '/services:/ {in_services=1} in_services && /adminer:/ {in_adminer=1} in_adminer && /ports:/ {sub(/.*ports:[ ]*/, ""); gsub(/"/, ""); if(length($$0)) {split($$0,a,":"); print a[1]; exit} while(getline line && line ~ /^[ \t]*-[ \t]*/) {sub(/^[ \t]*-[ \t]*/, "", line); gsub(/"/, "", line); split(line,a,":"); print "Adminer on http://localhost:"a[1] "\n"; exit} exit}' docker-compose.yml
 
 init:
-	@if [ ! -f .env ]; then \
-		echo "The .env file does not exist. Create it as a copy of .env.template and fill in your information if necessary."; \
-		exit 1; \
-	fi
 	mkdir -p src temp log
 	docker compose up -d
 	@make info

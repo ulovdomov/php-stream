@@ -4,10 +4,7 @@ services:
       context: .
       dockerfile: .infrastructure/docker/php/Dockerfile
       target: build-local
-      args:
-        - COMPOSER_HOME=/var/www/html/.composer
     environment:
-      COMPOSER_HOME: /var/www/html/.composer
       XDEBUG_SESSION: "1"
       XDEBUG_MODE: "debug"
       XDEBUG_CONFIG: "client_host=host.docker.internal"

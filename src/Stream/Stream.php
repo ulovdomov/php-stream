@@ -153,7 +153,7 @@ class Stream implements StreamInterface
             return new PumpStream($resource, $options);
         }
 
-        throw new StreamException('Invalid resource type: '.\gettype($resource));
+        throw new StreamException('Invalid resource type: ' . \gettype($resource));
     }
 
     /**
@@ -305,8 +305,9 @@ class Stream implements StreamInterface
         }
 
         if (\fseek($this->stream, $offset, $whence) === -1) {
-            throw new StreamException('Unable to seek to stream position '
-                . $offset . ' with whence ' . \var_export($whence, true));
+            throw new StreamException(
+                'Unable to seek to stream position ' . $offset . ' with whence ' . \var_export($whence, true),
+            );
         }
     }
 
